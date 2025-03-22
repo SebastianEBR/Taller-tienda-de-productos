@@ -1,0 +1,198 @@
+package org.uniquindio.edu.co.poo.app;
+
+import org.uniquindio.edu.co.poo.model.Cliente;
+import org.uniquindio.edu.co.poo.model.DetalleVenta;
+import org.uniquindio.edu.co.poo.model.Producto;
+import org.uniquindio.edu.co.poo.model.Tienda;
+
+import javax.swing.*;
+import java.awt.*;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.Scanner;
+
+public class Main {
+    public static void main(String[] args) {
+        System.out.println("Hello, World!");
+        Scanner scanner = new Scanner(System.in);
+
+        //TIP To <b>Run</b> code, press <shortcut actionId="Run"/> or
+        // click the <icon src="AllIcons.Actions.Execute"/> icon in the gutter.
+
+        JOptionPane.showMessageDialog(null,"Bienvenido a su aplicacion de tienda ");
+        String nombreTienda =  JOptionPane.showInputDialog(null,"Ingrese el nombre de la tienda");
+        String nit =  JOptionPane.showInputDialog(null,"Ingrese el nit de la tienda");
+        int numeroClientes = Integer.parseInt(JOptionPane.showInputDialog(null,"Ingrese el numero de clientes de la tienda"));
+        Tienda tienda = new Tienda(nombreTienda, nit, numeroClientes);
+
+
+        // un poquito de interfas
+        boolean continuar = true;
+
+        while (continuar) {
+            // Opciones del menú
+            String[] opciones = {
+                    "Registrar Cliente",
+                    "Mostrar Lista de Clientes",
+                    "Actualizar Cliente",
+                    "Eliminar Cliente",
+                    "Registrar Producto",
+                    "Mostrar el Inventario de Productos",
+                    "Actualizar Producto",
+                    "Eliminar Producto",
+                    "Registrar Venta",
+                    "Mostrar el Registro de Ventas",
+                    "Salir"
+            };
+
+            // Crear lista con las opciones
+            JList<String> lista = new JList<>(opciones);
+            lista.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+
+            // Mostrar el menú vertical en un JOptionPane
+            int seleccion = JOptionPane.showConfirmDialog(
+                    null,
+                    new JScrollPane(lista),
+                    "Seleccione una acción",
+                    JOptionPane.OK_CANCEL_OPTION
+            );
+
+            if (seleccion == JOptionPane.OK_OPTION) {
+                String opcionElegida = lista.getSelectedValue();
+
+                if (opcionElegida == null) {
+                    JOptionPane.showMessageDialog(null, "No seleccionaste ninguna opción.");
+                    continue;
+                }
+
+                // Evaluar la opción seleccionada
+                switch (opcionElegida) {
+                    case "Registrar Cliente":
+                        registrarCliente(tienda);
+                        break;
+                    case "Mostrar Lista de Clientes":
+                        mostrarListaClientes(tienda);
+                        break;
+                    case "Actualizar Cliente":
+                        actualizarCliente(tienda);
+                        break;
+                    case "Eliminar Cliente":
+                        eliminarCliente(tienda);
+                        break;
+                    case "Registrar Producto":
+                        registrarProducto(tienda);
+                        break;
+                    case "Mostrar el Inventario de Productos":
+                        mostrarInventarioProductos(tienda);
+                        break;
+                    case "Actualizar Producto":
+                        actualizarProducto(tienda);
+                        break;
+                    case "Eliminar Producto":
+                        eliminarProducto(tienda);
+                        break;
+                    case "Registrar Venta":
+                        registrarVenta(tienda);
+                        break;
+                    case "Mostrar el Registro de Ventas":
+                        mostrarRegistroVentas(tienda);
+                        break;
+                    case "Salir":
+                        continuar = false;
+                        JOptionPane.showMessageDialog(null, "¡Hasta luego!");
+                        break;
+                    default:
+                        JOptionPane.showMessageDialog(null, "Opción no válida.");
+                }
+            } else {
+                continuar = false;
+                JOptionPane.showMessageDialog(null, "¡Hasta luego!");
+            }
+        }
+    }
+
+
+
+    // metodos que llaman a los metodos de las clases dependiendo del caso
+    private static void registrarCliente(Tienda tienda) {
+        String nombre = JOptionPane.showInputDialog(null, "ingrese el nombre del cliente");
+        String id = JOptionPane.showInputDialog(null, "ingrese la identificacion del cliente");
+        String direccion = JOptionPane.showInputDialog(null, "ingrese el direccion del cliente");
+        String telefono = JOptionPane.showInputDialog(null, "ingrese el telefono del cliente");
+        String email = JOptionPane.showInputDialog(null, "ingrese el email del cliente");
+        String mensaje = tienda.registrarCliente(nombre, id, direccion, telefono, email);
+        JOptionPane.showMessageDialog(null, mensaje);
+    }
+
+    private static void mostrarListaClientes(Tienda tienda) {
+        JOptionPane.showMessageDialog(null, tienda.getListaClientes());
+    }
+
+    private static void actualizarCliente(Tienda tienda) {
+        String id = JOptionPane.showInputDialog(null, "ingrese la identificacion del cliente");
+        String nombre = JOptionPane.showInputDialog(null, "ingrese el nuevo nombre del cliente");
+        String direccion = JOptionPane.showInputDialog(null, "ingrese la nueva direccion del cliente");
+        String telefono = JOptionPane.showInputDialog(null, "ingrese el nuevo telefono del cliente");
+        String email = JOptionPane.showInputDialog(null, "ingrese el nuevo email del cliente");
+        String mensaje = tienda.actualizarCliente(nombre, id, direccion, telefono, email);
+        JOptionPane.showMessageDialog(null, mensaje);
+    }
+
+
+    private static void eliminarCliente(Tienda tienda) {
+        String id = JOptionPane.showInputDialog(null, "ingrese la identificacion del cliente que desea eliminar");
+        String mensaje = tienda.eliminarCliente(id);
+        JOptionPane.showMessageDialog(null, mensaje);
+    }
+
+
+    private static void registrarProducto(Tienda tienda) {
+        String nombre = JOptionPane.showInputDialog(null, "ingrese el nombre del producto");
+        String codigo = JOptionPane.showInputDialog(null, "ingrese el codigo del producto");
+        double precio = Double.parseDouble(JOptionPane.showInputDialog(null, "ingrese el precio del producto"));
+        String categoria = JOptionPane.showInputDialog(null, "ingrese la categoria del producto");
+        int stock = Integer.parseInt(JOptionPane.showInputDialog(null, "ingrese el stock del producto"));
+        String mensaje = tienda.registrarProducto(nombre, codigo, precio, categoria, stock);
+        JOptionPane.showMessageDialog(null, mensaje);
+    }
+
+    private static void mostrarInventarioProductos(Tienda tienda) {
+        JOptionPane.showMessageDialog(null, tienda.getInventarioProductos());
+    }
+
+    private static void actualizarProducto(Tienda tienda) {
+        String codigo = JOptionPane.showInputDialog(null, "ingrese el codigo del producto");
+        String nombre = JOptionPane.showInputDialog(null, "ingrese el nuevo nombre");
+        double precio = Double.parseDouble(JOptionPane.showInputDialog(null, "ingrese el nuevo precio del producto"));
+        String categoria = JOptionPane.showInputDialog(null, "ingrese la nueva categoria del producto");
+        int stock = Integer.parseInt(JOptionPane.showInputDialog(null, "ingrese el nuevo stock del producto"));
+        String mensaje = tienda.actualizarProducto(codigo, nombre, precio, categoria, stock);
+        JOptionPane.showMessageDialog(null, mensaje);
+    }
+
+
+    private static void eliminarProducto(Tienda tienda) {
+        String codigo = JOptionPane.showInputDialog(null, "ingrese el codigo del producto que desea eliminar");
+        String mensaje = tienda.eliminarProducto(codigo);
+        JOptionPane.showMessageDialog(null, mensaje);
+    }
+
+
+    private static void registrarVenta(Tienda tienda) {
+        ArrayList losProdcutos = tienda.getInventarioProductos();
+        if (losProdcutos.isEmpty()) {
+            JOptionPane.showMessageDialog(null, "Aun no puedes vender porque no hay productos en la tienda");
+        }else {
+            String fecha = JOptionPane.showInputDialog(null, "ingrese la fecha de la venta asi: **/***/****");
+            String idCliente = JOptionPane.showInputDialog(null, "ingrese el ID del cliente");
+            String codigoProducto = JOptionPane.showInputDialog(null, "ingrese el codigo del producto");
+            int cantidad = Integer.parseInt(JOptionPane.showInputDialog(null, "ingrese el cantidad del producto"));
+            String mensaje = tienda.registrarVenta(fecha, idCliente, codigoProducto, cantidad);
+            JOptionPane.showMessageDialog(null, mensaje);
+        }
+    }
+
+    private static void mostrarRegistroVentas(Tienda tienda) {
+        JOptionPane.showMessageDialog(null, tienda.getRegistroVentas());
+    }
+}
