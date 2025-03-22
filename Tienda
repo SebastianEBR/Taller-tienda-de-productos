@@ -1,0 +1,255 @@
+package org.uniquindio.edu.co.poo.model;
+
+import java.util.ArrayList;
+
+public class Tienda {
+    private String nombre;
+    private String nit;
+
+    // comunicacion con otras clases
+    private Cliente[] listaClientes;
+    private ArrayList<Venta> registroVentas;
+    private ArrayList<Producto> inventarioProductos;
+
+    // constructor
+    public Tienda(String nombre, String nit, int numeroClientes) {
+        this.nombre = nombre;
+        this.nit = nit;
+        this.listaClientes = new Cliente[numeroClientes];
+        this.registroVentas = new ArrayList<Venta>();
+        this.inventarioProductos = new ArrayList<Producto>();
+    }
+
+    // getters y setters
+    public String getNombre() {
+        return nombre;
+    }
+    public void setNombre(String nombre) {
+        this.nombre = nombre;
+    }
+    public String getNit() {
+        return nit;
+    }
+    public void setNit(String nit) {
+        this.nit = nit;
+    }
+    public Cliente[] getListaClientes() {
+        return listaClientes;
+    }
+    public void setListaClientes(Cliente[] listaClientes) {
+        this.listaClientes = listaClientes;
+    }
+    public ArrayList<Producto> getInventarioProductos() {
+        return inventarioProductos;
+    }
+    public void setInventarioProductos(ArrayList<Producto> inventarioProductos) {
+        this.inventarioProductos = inventarioProductos;
+    }
+    public ArrayList<Venta> getRegistroVentas() {
+        return registroVentas;
+    }
+    public void setRegistroVentas(ArrayList<Venta> registroVentas) {
+        this.registroVentas = registroVentas;
+    }
+
+
+    @Override
+    public String toString() {
+        String mensaje = "";
+        mensaje = "Tienda: "                +
+                "\n nombre: "               + nombre          +
+                "\n nit: "                  + nit             +
+                "\n lista de Clientes: "    + listaClientes   +
+                "\n registro Ventas: "      + registroVentas  +
+                "\n inventario productos: " + inventarioProductos;
+        return mensaje;
+    }
+
+    // metodos relacionados con clientes
+    public String registrarCliente (String nombreCliente, String idCliente, String direccionCliente, String telefonoCliente, String emailCliente) {
+        // pasos que se deben hacer oara que quede registrado el cliente en el sistema
+        String mensaje = "";
+        int posDisponible = -1;
+
+        posDisponible = buscarPosicionDisponible();
+
+        if (posDisponible != -1) {
+            Cliente clienteBuscado = buscarCliente(idCliente);
+            if (clienteBuscado == null) {
+                Cliente nuevoCliente = new Cliente(nombreCliente, idCliente, direccionCliente, telefonoCliente, emailCliente);
+                listaClientes [posDisponible] = nuevoCliente;
+                mensaje = "cliente registrado con exito!";
+            }else {
+                mensaje = "El cliente ya fue registrado anteriormente, no es posible tener dos clientes con la misma informacion";
+            }
+        }else {
+            mensaje = "No hay cupo para mas clientes";
+        }
+        return mensaje;
+    }
+
+    private Cliente buscarCliente(String idCliente) {
+        for (int i = 0; i < listaClientes.length; i++) {
+            if (listaClientes[i] != null && listaClientes[i].getId().equals(idCliente)) {
+                return listaClientes[i];
+            }
+        }
+        return null;
+    }
+
+    private int buscarPosicionDisponible() {
+        int pos = -1;
+
+        for (int i = 0; i < listaClientes.length; i++) {
+            if (listaClientes[i] == null) {
+                return i;
+            }
+        }
+        return pos;
+    }
+
+    public String actualizarCliente(String nombreCliente, String idCliente, String direccionCliente, String telefonoCliente, String emailCliente) {
+        String mensaje = "";
+        Cliente clienteBuscado = buscarCliente(idCliente);
+        if (clienteBuscado != null && clienteBuscado.getId().equals(idCliente)) {
+                clienteBuscado.setNombre(nombreCliente);
+                clienteBuscado.setDireccion(direccionCliente);
+                clienteBuscado.setTelefono(telefonoCliente);
+                clienteBuscado.setEmail(emailCliente);
+                mensaje = "cliente actualizado con exito!";
+        }else {
+            mensaje = "No existe el cliente";
+        }
+        return mensaje;
+    }
+
+
+    public String eliminarCliente(String idCliente) {
+        
+        if (listaClientes == null || listaClientes.length == 0) {
+            return "No hay clientes registrados.";
+        }
+
+        for (int i = 0; i < listaClientes.length; i++) {
+            Cliente clienteAux = listaClientes[i];
+            if (clienteAux != null && clienteAux.getId().equals(idCliente)) {
+                listaClientes[i] = null; // Eliminar el cliente
+                return "Cliente eliminado con éxito!";
+            }
+        }
+
+        return "No existe el cliente con id " + idCliente;
+    }
+
+
+
+    // metodos relacionados con productos
+    public String registrarProducto (String nombre, String codigo, double precio, String categoria, int stock) {
+        String mensaje = "";
+
+        Producto productoEncontrado = null;
+
+        productoEncontrado = buscarProducto(codigo);
+
+        if (productoEncontrado != null) {
+            mensaje = "YA existe un producto con el codigo" + codigo + "!";
+        }else {
+            Producto productoNuevo = new Producto(nombre, codigo, precio, categoria, stock);
+            inventarioProductos.add(productoNuevo);
+            mensaje = "prodcuto ha sido agregado";
+        }
+        return mensaje;
+    }
+
+    private Producto buscarProducto(String codigo) {
+        for (Producto productoAux : inventarioProductos) {
+            if (productoAux.getCodigo().equals(codigo)) {
+                return productoAux;
+            }
+        }
+        return null;
+    }
+
+    public String actualizarProducto(String codigo, String nuevoNombre, double nuevoPrecio, String nuevoCategoria, int nuevoStock) {
+        String mensaje = "";
+
+        Producto productoEncontrado = buscarProducto(codigo);
+        if (productoEncontrado != null) {
+            String codigoProducto = productoEncontrado.getCodigo();
+            if (codigoProducto.equals(codigo)){
+                productoEncontrado.setNombre(nuevoNombre);
+                productoEncontrado.setPrecio(nuevoPrecio);
+                productoEncontrado.setCategoria(nuevoCategoria);
+                productoEncontrado.setStock(nuevoStock);
+                mensaje = "Producto actualizado";
+            }else {
+                mensaje = "No se encontró el producto";
+            }
+        }else {
+            mensaje = "No existe el producto";
+        }
+
+        return mensaje;
+    }
+
+    /**
+     * Este metodo elimina un prodcuto de tienda
+     * @param codigo
+     * @return
+     */
+    public String eliminarProducto(String codigo) {
+        String mensaje = "";
+
+        Producto productoEncontrado = buscarProducto(codigo);
+        if (productoEncontrado != null) {
+            inventarioProductos.remove(productoEncontrado);
+            mensaje = "Se eliminó el prodcuto de la tienda";
+        }else {
+            mensaje = "No se eliminó el prodcuto de la tienda";
+        }
+        return mensaje;
+    }
+
+    // metodos realacionados con ventas
+    public String registrarVenta(String fecha, String idCliente, String CodigoProducto, int cantidad) {
+        String mensaje = "";
+
+        if (inventarioProductos.isEmpty()) {
+            return "No hay productos en la tienda.";
+        }
+
+        Producto productoAux = buscarProducto(CodigoProducto);
+        if (productoAux == null) {
+            return "No existe el producto con código: " + CodigoProducto;
+        }
+
+        Cliente clienteAux = buscarCliente(idCliente);
+        if (clienteAux == null) {
+            return "No existe el cliente con ID: " + idCliente + ". Debes registrarlo primero.";
+        }
+
+        if (cantidad > productoAux.getStock()) {
+            return "No hay suficiente stock del producto. SOLO hay: " + productoAux.getStock() + " de " + productoAux.getNombre();
+        }
+
+        DetalleVenta detalleVentaAux = crearDetalleVenta(cantidad, productoAux);
+        double total = detalleVentaAux.getSubTotal();
+
+        Venta venta = new Venta(fecha, clienteAux, productoAux, cantidad, total, detalleVentaAux);
+        registroVentas.add(venta);
+
+        // Actualizar el stock del producto
+        productoAux.setStock(productoAux.getStock() - cantidad);
+
+        return "Venta registrada con éxito el total es de: $" + total;
+    }
+
+
+    private DetalleVenta crearDetalleVenta(int cantidad, Producto producto) {
+        String nombreProducto = producto.getNombre();
+        double precioProducto = producto.getPrecio();
+        double subTotal = cantidad * precioProducto;
+        DetalleVenta datalleVenta = new DetalleVenta(cantidad, subTotal, nombreProducto);
+        return datalleVenta;
+    }
+}
