@@ -1,0 +1,81 @@
+package org.uniquindio.edu.co.poo.model;
+
+import java.util.Date;
+
+public class Venta {
+    private String fecha;
+    private Cliente cliente;
+    private Producto producto;
+    private int cantidad;
+    private double total;
+    private DetalleVenta detalleVenta;
+
+    public Venta(String fecha, Cliente cliente, Producto producto, int cantidad, double total, DetalleVenta detalleVenta) {
+        this.total = total;
+        this.cantidad = cantidad;
+        this.producto = producto;
+        this.cliente = cliente;
+        this.fecha = fecha;
+        this.detalleVenta = detalleVenta;
+    }
+
+    public String getFecha() {
+        return fecha;
+    }
+
+    public void setFecha(String fecha) {
+        this.fecha = fecha;
+    }
+
+    public Cliente getCliente() {
+        return cliente;
+    }
+
+    public void setCliente(Cliente cliente) {
+        this.cliente = cliente;
+    }
+
+    public Producto getProducto() {
+        return producto;
+    }
+
+    public void setProducto(Producto producto) {
+        this.producto = producto;
+    }
+
+    public int getCantidad() {
+        return cantidad;
+    }
+
+    public void setCantidad(int cantidad) {
+        this.cantidad = cantidad;
+    }
+
+    public double getTotal() {
+        return total;
+    }
+
+    public void setTotal(double total) {
+        this.total = total;
+    }
+
+    public DetalleVenta getDetalleVenta() {
+        return detalleVenta;
+    }
+    public void setDetalleVenta(DetalleVenta detalleVenta) {
+        this.detalleVenta = detalleVenta;
+    }
+
+    @Override
+    public String toString() {
+        return "Venta: "            +
+                "\n fecha= "        + fecha    +
+                "\n cliente= "      + cliente  +
+                "\n producto= "     + producto +
+                "\n cantidad= "     + cantidad +
+                "\n total= "        + total    +
+                "\n detalleVenta= " + detalleVenta;
+    }
+
+
+}
